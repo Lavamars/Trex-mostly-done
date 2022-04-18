@@ -1,6 +1,8 @@
 var ground, ground2, realg, cactus, cactus1,cactus2,cactus3,cactus4,cactus5,obstacle
 var trex ,trex_running;
-var rand,rand1, cloud, cloudimg;
+var rand,rand1, cloud, cloudimg, score=0, cloudGrp, obstacleGrp;
+var PLAY=1, END=0, gameState=PLAY;
+
 function preload(){
 trex_running=loadAnimation("trex1.png","trex3.png","trex4.png")
 ground2=loadImage("ground2.png")
@@ -22,6 +24,10 @@ function setup(){
   ground.addImage(ground2)
   realg=createSprite(300,190,600,10)
   realg.visible=false
+  cloudGrp=new Group()
+  obstacleGrp=new Group()
+  
+
 }
  function clouds(){  
  if (frameCount%75==0){
@@ -34,11 +40,13 @@ function setup(){
   cloud.velocityX = -2
   cloud.depth=trex.depth
   trex.depth=trex.depth+1
+  cloudGrp.add(cloud)
  }
 }
  function spawncactus(){
    if (frameCount%60==0){
     obstacle=createSprite(600,165,15,40)
+    obstacleGrp.add(obstacle)
     obstacle.lifetime = 305
     obstacle.scale=0.5
     obstacle.velocityX= -5
@@ -59,6 +67,7 @@ function setup(){
       default: break;
     }
    }
+   
  }
 
 
@@ -66,22 +75,39 @@ function setup(){
  
 function draw(){
   background("pink")
-  if(keyDown("space")){
-    if(trex.y>149){
-      trex.velocityY = -9
+  text("Score: "+score, 490,20)
+
+  if(gameState===PLAY){
+
+    score=score+Math.round(frameCount/60)
+    if(keyDown("space")){
+      if(trex.y>149){
+        trex.velocityY = -9
+      }
+   }
+    trex.velocityY= trex.velocityY+0.5
+    ground.velocityX=-5
+    if (ground.x<0){
+      ground.x=700
     }
- }
+    clouds()
+    spawncactus()
+
+    if(trex.isTouching(obstacleGrp)){
+      gameState=END
+    }    
+  }
+
+  else if(gameState===END){
+    obstacleGrp.setVelocityXEach(0)
+    cloudGrp.setVelocityXEach(0)
+    ground.velocityX=0
+  }
+
 
   
 trex.collide(realg)
-trex.velocityY= trex.velocityY+0.5
-ground.velocityX=-5
 
-if (ground.x<0){
-  ground.x=700
-}
-  clouds()
-  spawncactus()
   drawSprites()
 
 
