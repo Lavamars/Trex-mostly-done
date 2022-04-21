@@ -1,5 +1,5 @@
-var ground, ground2, realg, cactus, cactus1,cactus2,cactus3,cactus4,cactus5,obstacle
-var trex ,trex_running;
+var ground, ground2, realg, cactus, cactus1,cactus2,cactus3,cactus4,cactus5,obstacle, gameover, restart, gameoversprite, restartsprite
+var trex ,trex_running, tend;
 var rand,rand1, cloud, cloudimg, score=0, cloudGrp, obstacleGrp;
 var PLAY=1, END=0, gameState=PLAY;
 
@@ -13,6 +13,9 @@ cactus2=loadImage("obstacle3.png")
 cactus3=loadImage("obstacle4.png")
 cactus4=loadImage("obstacle5.png")
 cactus5=loadImage("obstacle6.png")
+gameover=loadImage("gameOver.png")
+restart=loadImage("restart.png")
+tend=loadAnimation("trex_collided.png")
 }
 
 function setup(){
@@ -26,7 +29,15 @@ function setup(){
   realg.visible=false
   cloudGrp=new Group()
   obstacleGrp=new Group()
-  
+  trex.debug=true
+  gameoversprite=createSprite(300,95,50,50)
+  gameoversprite.addImage(gameover)
+  gameoversprite.scale=0.8
+  restartsprite=createSprite(300,130,50,50)
+  restartsprite.addImage(restart)
+  restartsprite.scale=0.5
+  gameoversprite.visible=false
+  restartsprite.visible=false
 
 }
  function clouds(){  
@@ -99,9 +110,14 @@ function draw(){
   }
 
   else if(gameState===END){
+  
+    gameoversprite.visible=true
+    restartsprite.visible=true
+    trex.addAnimation("end",tend)
     obstacleGrp.setVelocityXEach(0)
     cloudGrp.setVelocityXEach(0)
     ground.velocityX=0
+    trex.velocityY=0
   }
 
 
