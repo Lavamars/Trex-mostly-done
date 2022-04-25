@@ -23,13 +23,14 @@ function setup(){
   trex=createSprite(80,160,20,50)
   trex.scale = 0.5
   trex.addAnimation("running",trex_running)
+  trex.addAnimation("end", tend)
   ground=createSprite(300,180,600,20)
   ground.addImage(ground2)
   realg=createSprite(300,190,600,10)
   realg.visible=false
   cloudGrp=new Group()
   obstacleGrp=new Group()
-  trex.debug=true
+  trex.debug=false
   gameoversprite=createSprite(300,95,50,50)
   gameoversprite.addImage(gameover)
   gameoversprite.scale=0.8
@@ -87,7 +88,6 @@ function setup(){
 function draw(){
   background("pink")
   text("Score: "+score, 490,20)
-
   if(gameState===PLAY){
 
     score=score+Math.round(frameCount/60)
@@ -113,11 +113,13 @@ function draw(){
   
     gameoversprite.visible=true
     restartsprite.visible=true
-    trex.addAnimation("end",tend)
+    trex.changeAnimation("end",tend)
     obstacleGrp.setVelocityXEach(0)
     cloudGrp.setVelocityXEach(0)
     ground.velocityX=0
     trex.velocityY=0
+    obstacleGrp.setLifetimeEach(2)
+    cloudGrp.setLifetimeEach(2)
   }
 
 
@@ -128,3 +130,4 @@ trex.collide(realg)
 
 
 }
+
